@@ -2,7 +2,7 @@ package SmartCampusServicesPortal.model.maintance;
 
 
 import SmartCampusServicesPortal.model.room.Room;
-import SmartCampusServicesPortal.model.User;
+import SmartCampusServicesPortal.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

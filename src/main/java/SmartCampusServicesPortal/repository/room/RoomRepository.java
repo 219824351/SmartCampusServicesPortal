@@ -1,4 +1,4 @@
-package SmartCampusServicesPortal.repository;
+package SmartCampusServicesPortal.repository.room;
 
 import SmartCampusServicesPortal.model.room.Room;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -24,7 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-public class SecuritConfig {
+public class SecurityConfig {
 
     @Autowired
     private UserDetailsImp userDetailsImp;
@@ -47,10 +47,11 @@ public class SecuritConfig {
                                         "/swagger-ui.html",
                                         "/webjars/**",
 
-                                "/auth/**")
+                                "/api/auth/**")
                                 .permitAll()
                                 .requestMatchers("/admin_only/**").hasAuthority("ADMIN")
                                 .requestMatchers("/api/lecturer/**").hasAnyAuthority("LECTURER", "ADMIN")
+                                .requestMatchers("/api/student/**").hasAnyAuthority("STUDENT","LECTURER", "ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 ).userDetailsService(userDetailsImp)

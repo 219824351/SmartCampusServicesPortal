@@ -1,6 +1,6 @@
-package SmartCampusServicesPortal.model;
+package SmartCampusServicesPortal.model.user;
 
-import SmartCampusServicesPortal.model.room.Role;
+import SmartCampusServicesPortal.model.token.Token;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,16 +26,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
-
-    @Column(name = "username")
-    private String username;
-    @Column(name = "password")
-    private String password;
-
-
-    @Enumerated(value = EnumType.STRING)
-    private Role role;
+    private Long id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -43,17 +34,24 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
-    }
+
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
 
     @Override
     public boolean isAccountNonExpired() {
@@ -74,6 +72,12 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
 
     @PrePersist
     protected void onCreate() {

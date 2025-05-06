@@ -2,7 +2,7 @@ package SmartCampusServicesPortal.service.auth;
 
 import SmartCampusServicesPortal.model.AuthenticationResponse;
 import SmartCampusServicesPortal.model.token.Token;
-import SmartCampusServicesPortal.model.User;
+import SmartCampusServicesPortal.model.user.User;
 import SmartCampusServicesPortal.repository.TokenRepository;
 import SmartCampusServicesPortal.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -47,11 +47,16 @@ public class AuthenticationService {
         user.setLastName(request.getLastName());
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+
         user.setRole(request.getRole());
 
         user = repository.save(user);
+
         String jwt = jwtService.generateToken(user);
+
         saveUserToken(jwt, user);
+
         return new AuthenticationResponse(jwt, "User registration was successful");
 
     }
@@ -74,7 +79,8 @@ public class AuthenticationService {
 
     }
     private void revokeAllTokenByUser(User user) {
-        List<Token> validTokens = tokenRepository.findAllTokensByUser(user.getId());
+        //  check math.tpIntExact
+        List<Token> validTokens = tokenRepository.findAllTokensByUser(Math.toIntExact(user.getId()));
         if(validTokens.isEmpty()) {
             return;
         }

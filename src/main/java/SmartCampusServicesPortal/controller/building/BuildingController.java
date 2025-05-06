@@ -1,4 +1,4 @@
-package SmartCampusServicesPortal.controller;
+package SmartCampusServicesPortal.controller.building;
 
 
 import SmartCampusServicesPortal.model.Building;

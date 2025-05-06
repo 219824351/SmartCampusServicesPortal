@@ -1,7 +1,7 @@
-package SmartCampusServicesPortal.controller;
+package SmartCampusServicesPortal.controller.auth;
 
 import SmartCampusServicesPortal.model.AuthenticationResponse;
-import SmartCampusServicesPortal.model.User;
+import SmartCampusServicesPortal.model.user.User;
 import SmartCampusServicesPortal.service.auth.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

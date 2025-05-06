@@ -1,8 +1,6 @@
-package SmartCampusServicesPortal.model.booking;
+package SmartCampusServicesPortal.model.course;
 
 
-import SmartCampusServicesPortal.model.room.Room;
-import SmartCampusServicesPortal.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,36 +9,25 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "courses")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "bookings")
-public class Booking {
+public class Course {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(nullable = false, unique = true)
+    private String code;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id", nullable = false)
-    private Room room;
-
-    @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
-
-    @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime;
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private BookingStatus status = BookingStatus.CONFIRMED;
-
-    private String purpose;
+    private String name;
+    private String description;
+    private Integer credits;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -59,4 +46,3 @@ public class Booking {
         updatedAt = LocalDateTime.now();
     }
 }
-

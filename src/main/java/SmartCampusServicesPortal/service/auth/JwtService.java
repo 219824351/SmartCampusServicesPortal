@@ -1,6 +1,7 @@
 package SmartCampusServicesPortal.service.auth;
 
-import SmartCampusServicesPortal.model.User;
+import SmartCampusServicesPortal.model.user.User;
+
 import SmartCampusServicesPortal.repository.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -79,4 +80,5 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64URL.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
 }

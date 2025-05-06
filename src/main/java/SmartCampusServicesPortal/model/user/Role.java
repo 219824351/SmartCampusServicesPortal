@@ -1,4 +1,4 @@
-package SmartCampusServicesPortal.model.room;
+package SmartCampusServicesPortal.model.user;
 
 public enum Role {
     STUDENT,

@@ -1,6 +1,9 @@
 package SmartCampusServicesPortal.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AuthenticationResponse {
+
     private final String token;
     private final String message;
 
