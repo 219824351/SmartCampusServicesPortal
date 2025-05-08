@@ -37,8 +37,17 @@ public class User implements UserDetails {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "phone_number")
+    private String phone_number;
+
     @Column(name = "password")
     private String password;
+
+
+
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

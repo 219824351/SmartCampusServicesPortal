@@ -37,6 +37,7 @@ public class NotificationService {
     }
 
     public long getUnreadCount(Long userId) {
+
         return notificationRepository.countByRecipientIdAndIsReadFalse(userId);
     }
 }
