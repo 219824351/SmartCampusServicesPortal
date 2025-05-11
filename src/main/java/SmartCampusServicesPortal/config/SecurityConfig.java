@@ -28,47 +28,48 @@ public class SecurityConfig {
 
     @Autowired
     private UserDetailsImp userDetailsImp;
+
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
-    private LogoutHandler logoutHandler;
+    private RoleBasedAuthenticationSuccessHandler successHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        return http
+        http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        req -> req.requestMatchers(
-                                        "/swagger-ui/**",
-                                        "/v3/api-docs/**",
-                                        "/swagger-resources/**",
-                                        "/swagger-ui.html",
-                                        "/webjars/**",
-
-                                "/api/auth/**")
-                                .permitAll()
-                                .requestMatchers("/admin_only/**").hasAuthority("ADMIN")
-                                .requestMatchers("/api/lecturer/**").hasAnyAuthority("LECTURER", "ADMIN")
-                                .requestMatchers("/api/student/**").hasAnyAuthority("STUDENT","LECTURER", "ADMIN")
-                                .anyRequest()
-                                .authenticated()
-                ).userDetailsService(userDetailsImp)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(
-                        e -> e.accessDeniedHandler(
-                                        (request, response, accessDeniedException) -> response.setStatus(403)
-                                )
-                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                .logout(l -> l
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/student/**").hasAuthority("STUDENT")
+                        .requestMatchers("/lecturer/**").hasAuthority("LECTURER")
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .successHandler(successHandler)  // Use our custom success handler
+                        .failureUrl("/login?error=true")
+                        .permitAll()
+                )
+                .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .addLogoutHandler(logoutHandler)
-                        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()
-                        ))
-                .build();
+                        .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true)  // Invalidate session
+                        .deleteCookies("JSESSIONID")  // Remove session cookie
+                        .permitAll()
+                        .permitAll()
+                )
+                // Change session creation policy for form login
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                )
+                // Add JWT filter only for API endpoints
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+
     }
 
     @Bean
