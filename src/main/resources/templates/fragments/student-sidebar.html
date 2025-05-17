@@ -1,0 +1,82 @@
+
+<div th:fragment="sidebar" class="sidebar">
+<div class="sidebar">
+    <div class="text-center py-4">
+        <h4 class="text-white">Student Portal</h4>
+    </div>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link active" href="/student/dashboard">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/student/schedule">
+                <i class="bi bi-calendar-week"></i> Class Schedule
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/student/timetable">
+                <i class="bi bi-calendar-range"></i> Timetable
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/student/book-room">
+                <i class="bi bi-door-open"></i> Book Study Room
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/student/maintenance">
+                <i class="bi bi-tools"></i> Report Issue
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/student/notifications">
+                <i class="bi bi-bell"></i> Notifications
+            </a>
+        </li>
+        <li class="nav-item mt-4">
+            <a class="nav-link logout" href="javascript:void(0);" onclick="showLogoutModal()">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Logout</span>
+            </a>
+        </li>
+    </ul>
+</div>
+</div>
+<!-- Logout Confirmation Modal -->
+<div id="logoutModal" class="logout-modal">
+    <div class="logout-modal-content">
+        <h3>Confirm Logout</h3>
+        <p>Are you sure you want to log out?</p>
+        <div class="logout-modal-buttons">
+            <button class="logout-modal-btn confirm" onclick="performLogout()">Logout</button>
+            <button class="logout-modal-btn cancel" onclick="hideLogoutModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Show logout confirmation modal
+function showLogoutModal() {
+    document.getElementById('logoutModal').style.display = 'flex';
+}
+
+// Hide logout confirmation modal
+function hideLogoutModal() {
+    document.getElementById('logoutModal').style.display = 'none';
+}
+
+// Perform actual logout
+function performLogout() {
+    window.location.href = '/logout'; // This should match your logout endpoint
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('logoutModal');
+    if (event.target === modal) {
+        hideLogoutModal();
+    }
+}
+</script>

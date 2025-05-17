@@ -1,0 +1,46 @@
+
+<div th:fragment="sidebar" class="sidebar">
+    <div class="sidebar">
+    <div class="sidebar-header">
+        <h4>Lecturer Portal</h4>
+    </div>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link active" href="/lecturer/dashboard">
+                <i class="bi bi-speedometer2"></i> <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/lecturer/schedule">
+                <i class="bi bi-calendar-event"></i> <span>Class Schedule</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/lecturer/timetable">
+                <i class="bi bi-calendar-range"></i> <span>Timetable</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/lecturer/announcements">
+                <i class="bi bi-megaphone"></i> <span>Announcements</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/lecturer/book-room">
+                <i class="bi bi-door-open"></i> <span>Book Room</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/lecturer/maintenance">
+                <i class="bi bi-tools"></i> <span>Report Issue</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link logout" href="javascript:void(0);" onclick="showLogoutModal()">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Logout</span>
+            </a>
+        </li>
+    </ul>
+</div>
+</div>

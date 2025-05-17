@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <style>
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .notification-item {
+            border-left: 4px solid #0d6efd;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .notification-unread {
+            background-color: #e7f5ff;
+            border-left: 4px solid #1c7ed6;
+        }
+        .notification-time {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+<nav id="sidebar">
+    <div th:replace="~{fragments/student-sidebar :: sidebar}"></div>
+</nav>
+<div class="main-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Notifications</h2>
+        <span class="badge bg-primary" th:text="${unreadCount} + ' unread'"></span>
+    </div>
+
+    <!-- Notifications List -->
+    <div th:each="notification : ${notifications}"
+         class="notification-item"
+         th:classappend="${!notification.read} ? 'notification-unread' : ''">
+        <div class="d-flex justify-content-between">
+            <h5 th:text="${notification.title}"></h5>
+            <span class="notification-time" th:text="${#temporals.format(notification.createdAt, 'MMM dd, hh:mm a')}"></span>
+        </div>
+        <p th:text="${notification.message}"></p>
+        <div class="d-flex justify-content-end">
+            <a th:href="@{/student/notifications/{id}/mark-read(id=${notification.id})}"
+               class="btn btn-sm btn-outline-primary"
+               th:if="${!notification.read}">
+                Mark as Read
+            </a>
+        </div>
+    </div>
+
+    <div th:if="${notifications.empty}" class="alert alert-info">
+        You don't have any notifications yet.
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

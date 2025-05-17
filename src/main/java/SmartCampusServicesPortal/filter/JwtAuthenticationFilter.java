@@ -1,7 +1,7 @@
 package SmartCampusServicesPortal.filter;
 
-import SmartCampusServicesPortal.service.auth.JwtService;
-import SmartCampusServicesPortal.service.auth.UserDetailsImp;
+import SmartCampusServicesPortal.service.JwtService;
+import SmartCampusServicesPortal.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,21 +22,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtService jwtService;
     @Autowired
-    private UserDetailsImp userDetailsService;
+    private UserService userDetailsService;
 
-        @Override
-        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
 
-            if (request.getServletPath().equals("/login") ||
-                    request.getServletPath().equals("/register") ||
-                    request.getServletPath().startsWith("/css/") ||
-                    request.getServletPath().startsWith("/js/") ||
-                    request.getServletPath().startsWith("/images/")) {
-                filterChain.doFilter(request, response);
-                return;
-            }
+        if (request.getServletPath().equals("/login") ||
+                request.getServletPath().equals("/register") ||
+                request.getServletPath().startsWith("/static/css/") ||
+                request.getServletPath().startsWith("/js/") ||
+                request.getServletPath().startsWith("/images/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String authHeader = request.getHeader("Authorization");
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {

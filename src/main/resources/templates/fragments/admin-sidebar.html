@@ -1,0 +1,47 @@
+
+<div th:fragment="sidebar" class="sidebar">
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h4>Admin Portal</h4>
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="/admin/dashboard">
+                    <i class="bi bi-speedometer2"></i> <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/analytics">
+                    <i class="bi bi-graph-up"></i> <span>Analytics</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/bookings">
+                    <i class="bi bi-calendar-check"></i> <span>Manage Bookings</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/maintenance">
+                    <i class="bi bi-tools"></i> <span>Maintenance</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/announcements">
+                    <i class="bi bi-megaphone"></i> <span>Announcements</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/users">
+                    <i class="bi bi-people"></i> <span>User Management</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link logout" href="javascript:void(0);" onclick="showLogoutModal()">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+

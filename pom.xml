@@ -93,6 +93,7 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 			<version>3.4.5</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>

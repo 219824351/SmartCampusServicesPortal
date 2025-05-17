@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Schedule</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <style>
+        :root {
+            --sidebar-bg: #2c3e50;
+            --sidebar-active: #3498db;
+            --sidebar-hover: #34495e;
+            --sidebar-text: #ecf0f1;
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-bg: #f8f9fa;
+            --dark-text: #2c3e50;
+            --light-text: #ecf0f1;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+  /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            height: 100vh;
+            position: fixed;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar .text-center {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar h4 {
+            color: var(--sidebar-text);
+            font-weight: 600;
+            margin: 0;
+           text-align: center;
+        }
+
+        .nav {
+            padding: 20px 0;
+        }
+
+        .nav-link {
+            color: var(--sidebar-text);
+            padding: 12px 20px;
+            margin: 5px 10px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            text-decoration: none;
+            border-bottom: none;
+        }
+
+        .nav-link:hover {
+            background-color: var(--sidebar-hover);
+            color: var(--sidebar-text);
+            text-decoration: none;
+        }
+
+        .nav-link.active {
+            background-color: var(--sidebar-active);
+            color: white;
+            font-weight: 500;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        .logout {
+            color: #e74c3c !important;
+        }
+
+        .logout:hover {
+            background-color: rgba(231, 76, 60, 0.1) !important;
+        }
+
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+
+        .schedule-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .schedule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .schedule-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .schedule-nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .schedule-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .schedule-table th {
+            background-color: #f8f9fa;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .schedule-table td {
+            padding: 0;
+            height: 80px;
+            border: 1px solid var(--border-color);
+            vertical-align: top;
+            position: relative;
+        }
+
+        .time-cell {
+            background-color: #f8f9fa;
+            padding: 5px;
+            text-align: center;
+            font-weight: 500;
+            width: 80px;
+        }
+
+        .schedule-event {
+            margin: 2px;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .schedule-event:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-event {
+            background-color: var(--primary-color);
+            border-left: 4px solid darken(var(--primary-color), 10%);
+        }
+
+        .lab-event {
+            background-color: var(--secondary-color);
+            border-left: 4px solid darken(var(--secondary-color), 10%);
+        }
+
+        .exam-event {
+            background-color: var(--danger-color);
+            border-left: 4px solid darken(var(--danger-color), 10%);
+        }
+
+        .event-title {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .event-details {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .current-day {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        .current-time {
+            position: relative;
+        }
+
+        .current-time::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 2px;
+            background-color: var(--danger-color);
+            z-index: 1;
+        }
+
+        .legend {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+        }
+
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+
+
+
+        @media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+            }
+
+             .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+
+            .sidebar .text-center,
+            .sidebar .nav-link span {
+                display: none;
+            }
+
+            .sidebar .nav-link {
+                justify-content: center;
+                padding: 12px 0;
+                margin: 5px 0;
+                border-radius: 0;
+            }
+
+            .sidebar .nav-link i {
+                margin-right: 0;
+                font-size: 1.3rem;
+            }
+
+            .schedule-table {
+                display: block;
+                overflow-x: auto;
+            }
+               .main-content {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Sidebar -->
+<nav id="sidebar">
+    <div th:replace="~{fragments/student-sidebar :: sidebar}"></div>
+</nav>
+
+<div class="main-content">
+    <div class="schedule-container">
+        <div class="schedule-header">
+            <h2>My Weekly Schedule</h2>
+            <div class="schedule-nav">
+                <a th:href="@{/student/schedule?week={week}(week=${previousWeek})}"
+                   class="schedule-nav-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                <span th:text="'Week ' + ${currentWeek} + ' - ' + ${currentDateRange}">Week 3 - Sep 12-18</span>
+                <a th:href="@{/student/schedule?week={week}(week=${nextWeek})}"
+                   class="schedule-nav-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                <button class="schedule-nav-btn" onclick="window.print()">
+                    <i class="fas fa-print"></i> Print
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            <table class="schedule-table">
+                <thead>
+                <tr>
+                    <th>Time</th>
+                    <th th:each="day : ${days}"
+                        th:text="${day}"
+                        th:classappend="${#temporals.isToday(day)} ? 'current-day' : ''">Monday</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="timeSlot : ${timeSlots}">
+                    <td class="time-cell" th:text="${timeSlot}">09:00-10:00</td>
+                    <td th:each="day : ${days}"
+                        th:attr="data-day=${day}, data-time=${timeSlot}"
+                        th:classappend="${#temporals.isToday(day)} ? 'current-day' : ''">
+                        <div th:each="event : ${scheduleEvents}"
+                             th:if="${event.day == day and event.timeSlot == timeSlot}">
+                            <div class="schedule-event"
+                                 th:classappend="${event.type == 'LAB' ? 'lab-event' :
+                                                event.type == 'EXAM' ? 'exam-event' : 'course-event'}">
+                                <div class="event-title" th:text="${event.courseCode} + ': ' + ${event.courseName}">CS101: Intro to CS</div>
+                                <div class="event-details">
+                                    <span th:text="${event.roomName}">SCI 101</span> |
+                                    <span th:text="${event.lecturerName}">Dr. Smith</span>
+                                </div>
+                                <div class="event-details" th:text="${event.timeSlot}">09:00-10:30</div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--primary-color);"></div>
+            <span>Course</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--secondary-color);"></div>
+            <span>Lab</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--danger-color);"></div>
+            <span>Exam</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Highlight current time slot
+    function highlightCurrentTime() {
+        const now = new Date();
+        const currentHour = now.getHours();
+        const currentMinutes = now.getMinutes();
+        const currentTime = currentHour * 60 + currentMinutes;
+
+        document.querySelectorAll('td[data-time]').forEach(cell => {
+            const timeRange = cell.getAttribute('data-time').split('-');
+            const startTime = convertTimeToMinutes(timeRange[0]);
+            const endTime = convertTimeToMinutes(timeRange[1]);
+
+            if (currentTime >= startTime && currentTime <= endTime) {
+                cell.classList.add('current-time');
+            }
+        });
+    }
+
+    function convertTimeToMinutes(timeStr) {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        return hours * 60 + (minutes || 0);
+    }
+
+function showLogoutModal() {
+        if(confirm('Are you sure you want to logout?')) {
+            window.location.href = '/logout';
+        }
+    }
+    // Run on page load
+    document.addEventListener('DOMContentLoaded', highlightCurrentTime);
+
+    // Refresh every minute to update current time indicator
+    setInterval(highlightCurrentTime, 60000);
+</script>
+</body>
+</html>

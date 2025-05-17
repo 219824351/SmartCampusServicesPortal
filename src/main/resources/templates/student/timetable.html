@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Timetable</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <style>
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .timetable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .timetable th, .timetable td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: center;
+            height: 80px;
+        }
+        .timetable th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        .time-col {
+            width: 80px;
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        .timetable-event {
+            background-color: #e7f5ff;
+            border-radius: 4px;
+            padding: 5px;
+            margin: 2px 0;
+            font-size: 0.85rem;
+            height: 100%;
+        }
+        .class-event {
+            background-color: #e7f5ff;
+            border-left: 3px solid #1c7ed6;
+        }
+        .booking-event {
+            background-color: #ebfbee;
+            border-left: 3px solid #2b8a3e;
+        }
+        .current-day {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+<nav id="sidebar">
+    <div th:replace="~{fragments/student-sidebar :: sidebar}"></div>
+</nav>
+<div class="main-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Weekly Timetable</h2>
+        <div>
+            <a th:href="@{/student/timetable(week=-1)}" class="btn btn-outline-secondary btn-sm me-2">
+                <i class="bi bi-chevron-left"></i> Prev Week
+            </a>
+            <span class="fw-bold" th:text="${'Week ' + currentWeek + ', ' + currentYear}"></span>
+            <a th:href="@{/student/timetable(week=1)}" class="btn btn-outline-secondary btn-sm ms-2">
+                Next Week <i class="bi bi-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="timetable">
+            <thead>
+            <tr>
+                <th>Time</th>
+                <th th:classappend="${#temporals.dayOfWeekName(#temporals.createToday()) == 'Monday'} ? 'current-day' : ''">Monday<br><span th:text="${weekDates.Monday}"></span></th>
+                <th th:classappend="${#temporals.dayOfWeekName(#temporals.createToday()) == 'Tuesday'} ? 'current-day' : ''">Tuesday<br><span th:text="${weekDates.Tuesday}"></span></th>
+                <th th:classappend="${#temporals.dayOfWeekName(#temporals.createToday()) == 'Wednesday'} ? 'current-day' : ''">Wednesday<br><span th:text="${weekDates.Wednesday}"></span></th>
+                <th th:classappend="${#temporals.dayOfWeekName(#temporals.createToday()) == 'Thursday'} ? 'current-day' : ''">Thursday<br><span th:text="${weekDates.Thursday}"></span></th>
+                <th th:classappend="${#temporals.dayOfWeekName(#temporals.createToday()) == 'Friday'} ? 'current-day' : ''">Friday<br><span th:text="${weekDates.Friday}"></span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="timeSlot : ${timeSlots}">
+                <td class="time-col" th:text="${timeSlot.startTime} + ' - ' + ${timeSlot.endTime}"></td>
+                <td th:each="day : ${days}">
+                    <div th:each="event : ${weeklySchedule[day][timeSlot.startTime]}"
+                         class="timetable-event"
+                         th:classappend="${event.type == 'COURSE'} ? 'class-event' : 'booking-event'">
+                        <strong th:text="${event.courseCode}"></strong><br>
+                        <span th:text="${event.title}"></span><br>
+                        <small th:text="${event.roomName}"></small>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-4">
+        <div class="d-flex">
+            <div class="me-3"><span class="badge class-event">Class</span></div>
+            <div><span class="badge booking-event">Booking</span></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
